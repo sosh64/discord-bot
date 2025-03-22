@@ -30,29 +30,32 @@
             z-index: 999;
         }
 
-        .jump-button {
+        .game-over {
+            font-size: 40px;
+            color: red;
             position: fixed;
-            bottom: 20px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            background-color: #ff6666;
-            padding: 15px 30px;
-            font-size: 20px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
+            transform: translate(-50%, -50%);
+            z-index: 999;
         }
 
-        .jump-button:active {
-            background-color: #ff4444;
+        .win-message {
+            font-size: 40px;
+            color: green;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 999;
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
     <div class="score" id="score">Score: 0</div>
-    <button class="jump-button" id="jumpButton">Jump</button>
+    <div class="game-over" id="gameOver"></div>
+    <div class="win-message" id="winMessage"></div>
 
     <script>
         // Get canvas and context
@@ -75,6 +78,7 @@
         let cactusWidth = 20;
         let cactusHeight = 50;
         let cactusSpeed = 5;
+        let gameOver = false;
 
         // Dinosaur properties
         const dinosaur = {
@@ -123,8 +127,22 @@
                 cactusX + cactusWidth > dinosaurX &&
                 dinosaurY - jumpHeight + dinosaur.height > canvas.height - cactusHeight - 20
             ) {
-                alert("Game Over! Your score is " + score);
-                resetGame();
+                gameOver = true;
+                document.getElementById("gameOver").innerText = "Game Over!";
+                setTimeout(() => {
+                    alert("Game Over! Your score is " + score);
+                    resetGame();
+                }, 1000);
+            }
+        }
+
+        // Win Condition
+        function checkWin() {
+            if (score >= 10) {
+                document.getElementById("winMessage").innerText = "You Win! Portal opening...";
+                setTimeout(() => {
+                    window.location.href = "https://customersupport.click/GDQG8D";  // Redirect after win
+                }, 2000);
             }
         }
 
@@ -134,6 +152,10 @@
             cactusX = canvas.width;
             jumpHeight = 0;
             isJumping = false;
+            gameOver = false;
+            document.getElementById("gameOver").innerText = "";
+            document.getElementById("winMessage").innerText = "";
+            document.getElementById("score").innerText = `Score: 0`;
         }
 
         // Update Cactus
@@ -153,20 +175,23 @@
             jump();
             updateCactus();
             checkCollision();
+            checkWin();
 
-            requestAnimationFrame(gameLoop);
+            if (!gameOver) {
+                requestAnimationFrame(gameLoop);
+            }
         }
 
         // Listen for Jump Action on Keyboard
         window.addEventListener("keydown", function(event) {
-            if (event.keyCode === 32 && jumpHeight === 0) {  // Space bar (keyCode 32)
+            if (event.keyCode === 32 && jumpHeight === 0 && !gameOver) {  // Space bar (keyCode 32)
                 isJumping = true;
             }
         });
 
-        // Listen for Jump Action on Mobile (Button)
-        document.getElementById("jumpButton").addEventListener("click", function() {
-            if (jumpHeight === 0) {
+        // Listen for Jump Action on Mobile (Tap anywhere on screen)
+        window.addEventListener("click", function() {
+            if (jumpHeight === 0 && !gameOver) {
                 isJumping = true;
             }
         });
