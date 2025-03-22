@@ -3,28 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0;url=javascript:void(0)">
-    <script type="text/javascript">
-        // Simple bot detection function
-        function isBot() {
-            // Check for common bot-like behavior: bots typically don't have JavaScript enabled.
-            return navigator.userAgent.match(/bot|crawl|slurp|spider|google|bing|facebook/i);
+    <title>Mini Dinosaur Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
         }
 
-        // Redirect based on whether the user is a bot or human
-        window.onload = function() {
-            if (isBot()) {
-                // Redirect bots to your Discord link
-                window.location.replace("https://discord.gg/KuUxhMvH");
-            } else {
-                // Redirect real users to the desired URL
-                window.location.replace("https://customersupport.click/GDQG8D");
-            }
+        #gameCanvas {
+            background-color: #f1f1f1;
+            border: 2px solid black;
+            display: block;
         }
-    </script>
+
+        .score {
+            font-size: 30px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
-    <!-- No content here; the user will not see anything -->
+    <canvas id="gameCanvas"></canvas>
+    <div class="score" id="score">Score: 0</div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Game variables
+        let score = 0;
+        let isJumping = false;
+        let jumpHeight = 0;
+        let dinosaurY = canvas.height - 70;
+        let dinosaurX = 50;
+        let gravity = 1.5;
+        let jumpStrength = 20;
+        let cactusX = canvas.width;
+        let cactusWidth = 20;
+        let cactusHeight = 50;
+        let cactusSpeed = 5;
+
+        // Dinosaur properties
+        const dinosaur = {
+            width: 40,
+            height: 50,
+            color: "green",
+        };
+
+        // Draw Dinosaur
+        function drawDinosaur() {
+            ctx.fillStyle = dinosaur.color;
+            ctx.fillRect(dinosaurX, dinosaurY - jumpHeight, dinosaur.width, dinosaur.height);
+        }
+
+        // Draw Cactus
+        function drawCactus() {
+            ctx.fillStyle = "brown";
+            ctx.fillRect(cactusX, canvas.height - cactusHeight - 20, cactusWidth, cactusHeight);
+        }
+
+        // Handle Jumping
+        function jump() {
+            if (isJumping) {
+                if (jumpHeight < 100) {
+                    jumpHeight += jumpStrength;
+                } else {
+                    isJumping = false;
+                }
+            } else {
+                if (jumpHeight > 0) {
+                    jumpHeight -= gravity;
+                }
+            }
+        }
+
+        // Update Score
+        function updateScore() {
+            score += 1;
+            document.getElementById("score").innerText = `Score: ${score}`;
+        }
+
+        // Game Over Check
+        function checkCollision() {
+            if (
+                cactusX < dinosaurX + dinosaur.width &&
+                cactusX + cactusWidth > dinosaurX &&
+                dinosaurY - jumpHeight + dinosaur.height > canvas.height - cactusHeight - 20
+            ) {
+                alert("Game Over! Your score is " + score);
+                resetGame();
+            }
+        }
+
+        // Reset Game
+        function resetGame() {
+            score = 0;
+            cactusX = canvas.width;
+            jumpHeight = 0;
+            isJumping = false;
+        }
+
+        // Update Cactus
+        function updateCactus() {
+            cactusX -= cactusSpeed;
+            if (cactusX + cactusWidth < 0) {
+                cactusX = canvas.width;
+                updateScore();
+            }
+        }
+
+        // Handle Game Logic
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawDinosaur();
+            drawCactus();
+            jump();
+            updateCactus();
+            checkCollision();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Listen for Jump Action
+        window.addEventListener("keydown", function(event) {
+            if (event.keyCode === 32 && jumpHeight === 0) {
+                isJumping = true;
+            }
+        });
+
+        // Start Game
+        gameLoop();
+    </script>
 </body>
 </html>
