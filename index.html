@@ -29,11 +29,30 @@
             left: 20px;
             z-index: 999;
         }
+
+        .jump-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ff6666;
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .jump-button:active {
+            background-color: #ff4444;
+        }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
     <div class="score" id="score">Score: 0</div>
+    <button class="jump-button" id="jumpButton">Jump</button>
 
     <script>
         // Get canvas and context
@@ -138,9 +157,16 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // Listen for Jump Action
+        // Listen for Jump Action on Keyboard
         window.addEventListener("keydown", function(event) {
-            if (event.keyCode === 32 && jumpHeight === 0) {
+            if (event.keyCode === 32 && jumpHeight === 0) {  // Space bar (keyCode 32)
+                isJumping = true;
+            }
+        });
+
+        // Listen for Jump Action on Mobile (Button)
+        document.getElementById("jumpButton").addEventListener("click", function() {
+            if (jumpHeight === 0) {
                 isJumping = true;
             }
         });
