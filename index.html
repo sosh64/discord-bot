@@ -14,6 +14,7 @@
             align-items: center;
             height: 100vh;
             font-family: 'Arial', sans-serif;
+            background-color: #f1f1f1;
         }
 
         #gameCanvas {
@@ -36,6 +37,7 @@
     <div class="score" id="score">Score: 0</div>
 
     <script>
+        // Get canvas and context
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
